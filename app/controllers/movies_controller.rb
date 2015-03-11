@@ -1,22 +1,28 @@
 # This file is app/controllers/movies_controller.rb
 class MoviesController < ApplicationController
 
-  def index
-    puts "index"
-    sortingCriteria = params[:sort_by]
-    puts sortingCriteria
-    @movies = Movie.all
-    if  sortingCriteria == "title"
-      puts "title sorting"
-      @movies.sort!{|x,y|x.title <=>y.title}   
-    elsif sortingCriteria == "rDate"
-      puts "date sorting"
-      @movies.sort!{|x,y|x.release_date <=>y.release_date}   
+  def index   
+    sortingCriteria = params[:sort_by] 
+    ratings = params[:ratings]   
+    @moviesTemp = Movie.all
+    if  sortingCriteria == "title"      
+      @moviesTemp.sort!{|x,y|x.title <=>y.title}   
+    elsif sortingCriteria == "rDate"  
+      @moviesTemp.sort!{|x,y|x.release_date <=>y.release_date}   
+    end    
+    @movies = Array.new
+    @all_ratings = Array['G','R',"PG-13",'PG']
+    if ratings.nil? == true
+      return
     end
-     @movies.each do |movie|
-      puts movie.title
+    @moviesTemp.each do |one|     
+      puts one.rating     
+      ratings.each do |checkRating|
+        if checkRating[0] == one.rating
+          @movies << one        
+         end
+      end
     end
-    @all_ratings = Array[1, 2, 3, 4,5]
   end
 
   def show
